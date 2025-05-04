@@ -1,0 +1,71 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: linear-gradient(45deg, rgb(242, 234, 255), rgb(105, 20, 84));
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+header {
+    text-align: center;
+    background-color: rgb(120, 41, 107);
+    padding: 0.3rem;
+    color: white;
+    position: relative;
+}
+
+header button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border: none;
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0,3);
+    border-radius: 50%;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    overflow-y: scroll;
+}
+
+.message {
+    background: linear-gradient(to right, rgb(106, 15, 88), rgb(106, 45, 98));
+    width: fit-content;
+    padding: 0.5rem;
+    border-radius: 0.3rem;
+    color: white;
+    
+}
+
+.message:nth-child(3){
+    align-self: flex-end;
+}
+
+
+.form {
+    display: flex;
+}
+.form input {
+    flex-grow: 1;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.form button {
+    background-color: purple;
+    color: white;
+    padding: 0 1rem;
+    font-size: 1.2rem;
+}
