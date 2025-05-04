@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Yeva-Yar/Chat_ND14#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "mysql2": "^3.14.0",
     "socket.io": "^4.8.1"
