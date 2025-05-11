@@ -52,9 +52,18 @@ async function existUsers(login){
     }
 }
 
+async function getUser(login){
+    try{
+        let [users, flieds] = await adb.query("SELECT * FROM User WHERE login = ?", [login])
+        return users
+    }catch(err){
+        throw err.message
+    }
+}
+
 async function addUsers(login, password){
     try{
-        let [users, flieds] = await adb.query("INSENT INTO User(login, password)VALUES(?,?)", [login, password])
+        let [users, flieds] = await adb.query("INSERT INTO User(login, pasword)VALUES(?,?)", [login, password])
         return users
     }catch(err){
         throw err.message
@@ -66,5 +75,6 @@ module.exports = {
     getMessages,
     addMessage,
     existUsers,
-    addUsers
+    addUsers,
+    getUser
 }

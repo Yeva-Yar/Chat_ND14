@@ -4,9 +4,7 @@ let http = require("http")
 let path = require("path")
 let fs = require("fs")
 let socket = require("socket.io")
-const { json } = require("stream/consumers")
-
-
+let bcrypt = require("bcrypt")
 
 let pathToIndex = path.join(__dirname, "static", "index.html")
 let index = fs.readFileSync(pathToIndex, "utf-8")
@@ -19,6 +17,9 @@ let script = fs.readFileSync(pathToScript, "utf-8")
 
 let pathToRegister = path.join(__dirname, "static", "register.html")
 let register = fs.readFileSync(pathToRegister, "utf-8")
+
+let pathToLoginPage = path.join(__dirname, "static", "login.html")
+let loginPage = fs.readFileSync(pathToLoginPage, "utf-8")
 
 let pathToAuth = path.join(__dirname, "static", "auth.js")
 let auth = fs.readFileSync(pathToAuth, "utf-8")
@@ -41,6 +42,10 @@ let server = http.createServer(function(req, res){
             res.writeHead(200, {"content-type": "text/html"})
             res.end(register)
             break;
+        case "/login":
+            res.writeHead(200, {"content-type": "text/html"})
+            res.end(loginPage)
+            break;
         case "/auth.js":
             res.writeHead(200, {"content-type": "text/html"})
             res.end(auth)
@@ -61,9 +66,21 @@ let server = http.createServer(function(req, res){
                 console.log(data)
                 if(await db.existUsers(data.login)){
                     res.end(JSON.stringify({status: "User exist"}))
+                    return
                 }
-                
-                res.end()
+                let hash = await bcrypt.hash(data.password, 10)
+                console.log(data.password, hash)
+                await db.addUsers(data.login, hash)
+                res.end(JSON.stringify({status:"ok"}))
+            })
+            
+        break;
+        case "/api/register":
+            let datalogin = ""
+            req.on("data",(chunk)=> datalogin += chunk)
+            req.on("end",async ()=>{
+                datalogin = JSON.parse(datalogin)
+                res.end(JSON.stringify({status:"ok"}))
             })
             
         break;
