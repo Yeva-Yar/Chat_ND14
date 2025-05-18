@@ -27,7 +27,6 @@ document.querySelector("form.login")?.addEventListener("submit", (e)=>{
     let login = data.get("login")
     let password = data.get("password")
     e.preventDefault();
-    console.log(login, password, passwordR)
     fetch("/api/login", {
         method: "POST",
         body: JSON.stringify({login, password})
@@ -36,6 +35,9 @@ document.querySelector("form.login")?.addEventListener("submit", (e)=>{
         if(res.status == "error"){
             alert("Логін чи пароль не вірні")
         }else if(res.status == "ok"){
+            document.cookie= "token=" + res.token
+            document.cookie= "login=" + res.login
+            document.cookie= "id=" + res.id
             window.location = "/"
         }
     })
