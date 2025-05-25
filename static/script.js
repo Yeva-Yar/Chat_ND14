@@ -1,5 +1,6 @@
 const server = io()
 let login = document.cookie.split("; ").find(el=>el.startsWith("login"))
+let id = document.cookie.split("; ").find(el=>el.startsWith("id")).split("=")[1]
 console.log(login)
 let nickname = "Sherlok"
 document.querySelector(".form button").addEventListener("click", sendMessage)
@@ -8,7 +9,7 @@ function sendMessage(){
     let input = document.querySelector(".form input").value 
     document.querySelector(".form input").value = ""
     server.emit("message", JSON.stringify({
-        user: nickname,
+        user: id,
         message: input
     }))
 }
@@ -29,7 +30,10 @@ alertify.success("Alertify is work!")
 
 
 document.querySelector("header button").addEventListener("click", ()=>{
-    alertify.prompt("Введіть свій нікнейм..", function(e, val){
-        if(e) nickname = val
+    alertify.confirm("Ви впевнені?", function(e){
+        if(e) {
+            document.cookie = "token="
+            window.location.assign("/login")
+        }
     })
 })

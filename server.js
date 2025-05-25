@@ -33,9 +33,10 @@ let auth = fs.readFileSync(pathToAuth, "utf-8")
     //     console.log(err)
     // })
     
-let server = http.createServer(function(req, res){
+let server = http.createServer(async function(req, res){
     switch(req.url){
         case "/":
+            if (await Protect(req, res) !=true ) return
             res.writeHead(200, {"content-type": "text/html"})
             res.end(index)
             break;
@@ -122,14 +123,32 @@ io.on("connection",async (s)=>{
     s.on("message", async (data)=>{
         let message = JSON.parse(data)
         let text = message.message
+        console.log(message)
         
-        await db.addMessage(text, 2)
+        await db.addMessage(text, message.user)
 
         let messages = await db.getMessages()
         console.log(messages)
         let chat = messages.map(m=>({user: m.login, message: m.content}))
         
         io.emit("update", JSON.stringify(chat))
-    })
-})
+    });
+});
 
+async function Protect(req,res) {
+    let cookie = req.headers.cookie
+    if(cookie == undefined){
+        res.writeHead(302, {"location": "/login"})
+        res.end()
+        return
+    }
+    let token = cookie.split("; ").find(el=>el.startsWith("token")).split("=")[1]
+    if(await jwt.decode(token)){
+        return true
+    }else{
+        res.writeHead(302, {"location": "/login"})
+        res.end()
+        return
+    }
+    console.log(token)    
+}
